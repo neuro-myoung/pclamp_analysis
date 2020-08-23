@@ -37,7 +37,12 @@ def load_file(path):
 
     nSweeps = int((len(rawFile)-len(processedFile)-1)/2)   # Use the difference in file with and without headers to find nSweeps
 
-    df = pd.DataFrame(columns=['index','ti','i','tp','p'], data=processedFile)
+    if len(processedFile[0]) == 5:
+        colnames = ['index','ti','i','tp','p']
+    else:
+        colnames = ['index','ti','i','tp','p','tv','v']
+
+    df = pd.DataFrame(columns=colnames, data=processedFile)
     df = df.apply(pd.to_numeric)
     df = df.dropna(axis=0)
     df['sweep'] = np.repeat(np.arange(nSweeps), len(df)/nSweeps)
@@ -291,26 +296,6 @@ def plot_summary(df, yval):
         showlegend=False,
         hovermode='closest')
 
-    if window != (min(df.pressure),max(df.pressure)):
-        fig.update_layout(
-            shapes=[
-                dict(
-                    type="rect",
-                    xref="x",
-                    yref="paper",
-                    x0=window[0],
-                    y0=0,
-                    x1=window[1],
-                    y1=1,
-                    fillcolor="LightBlue",
-                    opacity=0.5,
-                    layer="below",
-                    line_width=0,
-                    )
-                ]
-            )
-
-
     return(fig)
 
 def fit_layer(df, fig, fit):
@@ -365,6 +350,10 @@ def get_table_download_link(df):
     href = f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
     return(href)
 
+def linear_fit(x, m, b):
+    y = m*x + b
+    return(y);k
+    
 #####################################################################################################################
 
 st.beta_set_page_config(
@@ -381,14 +370,13 @@ if data is None:
     st.warning('Upload a file to run the app...')
     st.stop()
 
-
 ########################################### Sweep View ########################################################
 
 st.title('Pressure Clamp Analysis')
 st.header('1. Sweep View')
 
 [df, df_cache] = load_file(data)
-
+df = filter_data(df)
 # Recover original dataframe
 if st.sidebar.button('Reset Data'):
     df = df_cache
@@ -424,7 +412,7 @@ subsetWindow = st.sidebar.slider('Subset Window:', min(df.ti), max(df.ti), (min(
 if st.sidebar.button('Subset Data'):
     df = df.query('ti >= @subsetWindow[0] and ti < @subsetWindow[1]')
 
-sweepIDs = list(range(0, 17))
+sweepIDs = list(range(0, len(np.unique(df.sweep))))
 removeList = st.sidebar.multiselect(
     'Select sweeps to remove if any:',
     sweepIDs)
