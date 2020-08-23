@@ -350,10 +350,6 @@ def get_table_download_link(df):
     href = f'<a href="data:file/csv;base64,{b64}" download="myfilename.csv">Download csv file</a>'
     return(href)
 
-def linear_fit(x, m, b):
-    y = m*x + b
-    return(y);k
-    
 #####################################################################################################################
 
 st.beta_set_page_config(
@@ -376,7 +372,7 @@ st.title('Pressure Clamp Analysis')
 st.header('1. Sweep View')
 
 [df, df_cache] = load_file(data)
-df = filter_data(df)
+
 # Recover original dataframe
 if st.sidebar.button('Reset Data'):
     df = df_cache
