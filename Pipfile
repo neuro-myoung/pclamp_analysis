@@ -12,6 +12,7 @@ plotly = "*"
 streamlit = "*"
 cufflinks = "*"
 scipy = "*"
+pexpect = "*"
 
 [requires]
 python_version = "3.8"
