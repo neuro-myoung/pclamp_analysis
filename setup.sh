@@ -1,13 +1,12 @@
+#!/bin/bash
+
 mkdir -p ~/.streamlit/
 
-echo "\
-[general]\n\
-email = \"michael.young@duke.edu\"\n\
-" > ~/.streamlit/credentials.toml
-
-echo "\
-[server]\n\
-headless = true\n\
-enableCORS=false\n\
-port = $PORT\n\
-" > ~/.streamlit/config.toml
+cat <<\EOT > ~/.streamlit/credentials.toml
+[general]
+email = "michael.young@duke.edu
+[server]
+headless = true
+enableCORS=false
+port = $PORT
+EOT
