@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import streamlit as st
 import re
 import numpy as np
@@ -9,7 +11,7 @@ import plotly.graph_objs as go
 import plotly.express as px
 from scipy.optimize import curve_fit
 import base64
-
+import sys
 
 ############################################## Define Functions ####################################################
 @st.cache(allow_output_mutation=True)
